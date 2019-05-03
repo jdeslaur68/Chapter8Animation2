@@ -1,4 +1,6 @@
 import pygame
+from Ball import Ball
+from Walls import Wall
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -6,10 +8,13 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+SCREENWIDTH = 700
+SCREENHEIGHT = 500
+
 pygame.init()
 
 # Set the width and height of the screen [width, height]
-size = (700, 500)
+size = (SCREENWIDTH, SCREENHEIGHT)
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("My Game")
@@ -20,10 +25,20 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
-x = 350
-y = 250
-dx = 3
-dy = 3
+aball = Ball(100, 100, 3, 3, 10, WHITE)
+wall01 = Wall(100, 300, 10, 50, RED)
+
+# This is a list of 'sprites.  All the walls
+# The list is managed by a class called 'Group.'
+block_list = pygame.sprite.Group()
+block_list.add(wall01)
+
+
+# This is a list of every sprite.
+# All walls and the ball as well.
+all_sprites_list = pygame.sprite.Group()
+all_sprites_list.add(aball)
+all_sprites_list.add(wall01)
 
 # -------- Main Program Loop -----------
 while not done:
@@ -45,12 +60,10 @@ while not done:
 
     # --- Drawing code should go here
 
-    pygame.draw.rect(screen, WHITE, [x,y,50,50])
-    x+= dx
-    y+= dy
-    if x+50 > 700 or x < 0:  dx *= -1
-    if y+50 > 500 or y < 0:  dy *= -1
-
+    aball.move()
+    all_sprites_list.draw(screen)
+   # aball.draw(screen)
+   # wall01.draw(screen)
 
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
